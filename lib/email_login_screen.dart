@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class EmailLoginScreen extends StatelessWidget {
   const EmailLoginScreen({super.key});
@@ -12,11 +13,16 @@ class EmailLoginScreen extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Align(
+              Align(
                 alignment: Alignment.centerLeft,
-                child: Icon(
-                  Icons.close,
-                  size: 20,
+                child: InkWell(
+                  onTap: () {
+                    context.pop();
+                  },
+                  child: const Icon(
+                    Icons.arrow_back,
+                    size: 20,
+                  ),
                 ),
               ),
 
@@ -87,23 +93,33 @@ class EmailLoginScreen extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const Text(
-                    'Forget Password?',
-                    style: TextStyle(
-                      fontFamily: 'Poppins',
-                      fontSize: 10,
-                      fontWeight: FontWeight.w600,
-                      color: Colors.deepOrangeAccent,
+                  InkWell(
+                    onTap: () {
+                      context.push('/forgot-password');
+                    },
+                    child: const Text(
+                      'Forget Password?',
+                      style: TextStyle(
+                        fontFamily: 'Poppins',
+                        fontSize: 10,
+                        fontWeight: FontWeight.w600,
+                        color: Colors.deepOrangeAccent,
+                      ),
                     ),
                   ),
 
-                  const Text(
-                    'Create an account?',
-                    style: TextStyle(
-                      fontFamily: 'Poppins',
-                      fontSize: 10,
-                      fontWeight: FontWeight.w600,
-                      color: Colors.deepOrangeAccent,
+                  InkWell(
+                    onTap: () {
+                      context.push('/register');
+                    },
+                    child: const Text(
+                      'Create an account?',
+                      style: TextStyle(
+                        fontFamily: 'Poppins',
+                        fontSize: 10,
+                        fontWeight: FontWeight.w600,
+                        color: Colors.deepOrangeAccent,
+                      ),
                     ),
                   ),
                 ],
