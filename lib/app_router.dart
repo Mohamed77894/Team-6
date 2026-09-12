@@ -3,7 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'start_up_screen.dart';
 import 'email_login_screen.dart';
 
-import 'routes.dart';
+import 'routes.dart' as routes;
 
 class AppRouter {
   static final GoRouter appRouter = GoRouter(
@@ -12,7 +12,7 @@ class AppRouter {
     routes: [
       GoRoute(
         path: '/startUpScreen',
-        name: Routes.startUpScreen,
+        name: routes.startUpScreen,
         builder: (context, state) {
           return const StartUpScreen();
         },
@@ -20,7 +20,7 @@ class AppRouter {
 
       GoRoute(
         path: '/emailLoginScreen',
-        name: Routes.emailLoginScreen,
+        name: routes.emailLoginScreen,
         builder: (context, state) {
           return const EmailLoginScreen();
         },
