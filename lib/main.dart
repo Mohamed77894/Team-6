@@ -1,8 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+
 import 'app_router.dart';
+import 'app_theme.dart';
+import 'theme_cubit.dart';
+import 'theme_state.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(
+    BlocProvider(
+      create: (context) => ThemeCubit(),
+      child: const MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -10,9 +20,20 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp.router(
-      debugShowCheckedModeBanner: false,
-      routerConfig: AppRouter.appRouter,
+    return BlocBuilder<ThemeCubit, ThemeState>(
+      builder: (context, state) {
+        return MaterialApp.router(
+          debugShowCheckedModeBanner: false,
+          routerConfig: AppRouter.appRouter,
+
+          theme: AppTheme.lightTheme,
+          darkTheme: AppTheme.darkTheme,
+
+          themeMode: state.isDark
+              ? ThemeMode.dark
+              : ThemeMode.light,
+        );
+      },
     );
   }
 }

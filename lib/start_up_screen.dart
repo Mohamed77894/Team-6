@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'theme_cubit.dart';
+import 'theme_state.dart';
 
 class StartUpScreen extends StatelessWidget {
   const StartUpScreen({super.key});
@@ -20,7 +23,9 @@ class StartUpScreen extends StatelessWidget {
                 ),
               ),
             ),
+
             const SizedBox(height: 5),
+
             const Text(
               'Your everyday, right away',
               style: TextStyle(
@@ -29,7 +34,9 @@ class StartUpScreen extends StatelessWidget {
                 color: Colors.grey,
               ),
             ),
+
             const SizedBox(height: 35),
+
             const Text(
               'Login or create an account',
               style: TextStyle(
@@ -39,7 +46,9 @@ class StartUpScreen extends StatelessWidget {
                 fontWeight: FontWeight.w600,
               ),
             ),
+
             const SizedBox(height: 5),
+
             const Text(
               'Receive rewards and save your details for a faster checkout experience.',
               style: TextStyle(
@@ -50,6 +59,7 @@ class StartUpScreen extends StatelessWidget {
             ),
 
             const SizedBox(height: 25),
+
             Container(
               width: 300,
               height: 45,
@@ -79,7 +89,9 @@ class StartUpScreen extends StatelessWidget {
                 ],
               ),
             ),
+
             const SizedBox(height: 8),
+
             Container(
               width: 300,
               height: 45,
@@ -111,6 +123,7 @@ class StartUpScreen extends StatelessWidget {
             ),
 
             const SizedBox(height: 8),
+
             Container(
               width: 300,
               height: 45,
@@ -140,10 +153,12 @@ class StartUpScreen extends StatelessWidget {
                 ],
               ),
             ),
+
             const SizedBox(height: 8),
+
             InkWell(
-              onTap :() {
-context.push('/emailLoginScreen');
+              onTap: () {
+                context.push('/emailLoginScreen');
               },
               child: Container(
                 width: 300,
@@ -173,6 +188,17 @@ context.push('/emailLoginScreen');
                   ],
                 ),
               ),
+            ),
+
+            BlocBuilder<ThemeCubit, ThemeState>(
+              builder: (context, state) {
+                return Switch(
+                  value: state.isDark,
+                  onChanged: (value) {
+                    context.read<ThemeCubit>().changeTheme();
+                  },
+                );
+              },
             ),
           ],
         ),
