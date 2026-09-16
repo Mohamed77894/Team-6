@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'theme_cubit.dart';
-import 'theme_state.dart';
+import '../../../../theme_cubit.dart';
+import '../../../../theme_state.dart';
 
 class StartUpScreen extends StatelessWidget {
   const StartUpScreen({super.key});

@@ -1,9 +1,11 @@
 import 'package:go_router/go_router.dart';
 
-import 'start_up_screen.dart';
-import 'email_login_screen.dart';
-import 'forgot_password_screen.dart';
-import 'register_screen.dart';
+import '../features/auth/presentation/screens/start_up_screen.dart';
+import '../features/auth/presentation/screens/email_login_screen.dart';
+import '../features/auth/presentation/screens/forgot_password_screen.dart';
+import '../features/auth/presentation/screens/register_screen.dart';
+import '../items_screen.dart' ;
+
 
 import 'routes.dart' as routes;
 
@@ -41,6 +43,13 @@ class AppRouter {
         name: routes.registerScreen,
         builder: (context, state) {
           return const RegisterScreen();
+        },
+      ),
+      GoRoute(
+        path: '/items-screen',
+        name: routes.itemsScreen,
+        builder: (context, state) {
+          return const ItemsScreen();
         },
       ),
     ],

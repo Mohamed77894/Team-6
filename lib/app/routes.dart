@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
-import 'start_up_screen.dart';
-import 'email_login_screen.dart';
-import 'register_screen.dart';
-import 'forgot_password_screen.dart';
+import '../features/auth/presentation/screens/start_up_screen.dart';
+import '../features/auth/presentation/screens/email_login_screen.dart';
+import '../features/auth/presentation/screens/register_screen.dart';
+import '../features/auth/presentation/screens/forgot_password_screen.dart';
+import '../items_screen.dart';
 
 const String startUpScreen = 'startUpScreen';
 const String emailLoginScreen = 'emailLoginScreen';
 const String registerScreen = 'registerScreen';
+const String itemsScreen = 'itemsScreen';
 
 final GoRouter router = GoRouter(
   initialLocation: '/',
@@ -37,5 +39,11 @@ final GoRouter router = GoRouter(
       name: 'forgotPassword',
       builder: (context, state) => const ForgotPasswordScreen(),
     ),
+     GoRoute(
+      path: '/items-screen',
+      name: 'itemsScreen',
+      builder: (context, state) => const ItemsScreen (),
+    ),
   ],
 );
+
