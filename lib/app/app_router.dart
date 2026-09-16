@@ -4,18 +4,17 @@ import '../features/auth/presentation/screens/start_up_screen.dart';
 import '../features/auth/presentation/screens/email_login_screen.dart';
 import '../features/auth/presentation/screens/forgot_password_screen.dart';
 import '../features/auth/presentation/screens/register_screen.dart';
-import '../items_screen.dart' ;
-
+import '../items_screen.dart';
 
 import 'routes.dart' as routes;
 
 class AppRouter {
   static final GoRouter appRouter = GoRouter(
-    initialLocation: '/startUpScreen',
+    initialLocation: '/',
 
     routes: [
       GoRoute(
-        path: '/startUpScreen',
+        path: '/',
         name: routes.startUpScreen,
         builder: (context, state) {
           return const StartUpScreen();
@@ -23,7 +22,7 @@ class AppRouter {
       ),
 
       GoRoute(
-        path: '/emailLoginScreen',
+        path: '/email-login',
         name: routes.emailLoginScreen,
         builder: (context, state) {
           return const EmailLoginScreen();
@@ -32,7 +31,7 @@ class AppRouter {
 
       GoRoute(
         path: '/forgot-password',
-        name: 'forgotPassword',
+        name: routes.forgetpassword ,
         builder: (context, state) {
           return const ForgotPasswordScreen();
         },
@@ -45,6 +44,7 @@ class AppRouter {
           return const RegisterScreen();
         },
       ),
+
       GoRoute(
         path: '/items-screen',
         name: routes.itemsScreen,

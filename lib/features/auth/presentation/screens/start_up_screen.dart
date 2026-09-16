@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import '../../../../theme_cubit.dart';
-import '../../../../theme_state.dart';
+
+import '../../../../core/theme/theme_cubit.dart';
+import '../../../../core/theme/theme_state.dart';
 
 class StartUpScreen extends StatelessWidget {
   const StartUpScreen({super.key});
@@ -158,7 +159,7 @@ class StartUpScreen extends StatelessWidget {
 
             InkWell(
               onTap: () {
-                context.push('/emailLoginScreen');
+                context.push('/email-login');
               },
               child: Container(
                 width: 300,
