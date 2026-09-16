@@ -1,4 +1,3 @@
-abstract class EndPoints {
-  static const baseUrl = "";
-  static const login = "";
+class EndPoints {
+  static const String products = '/products';
 }

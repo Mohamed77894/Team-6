@@ -201,6 +201,13 @@ class StartUpScreen extends StatelessWidget {
                 );
               },
             ),
+            SizedBox(height: 5,) ,
+          IconButton(
+  onPressed: () {
+    context.pushNamed('itemsScreen');
+  },
+  icon: const Icon(Icons.shopping_bag),
+)
           ],
         ),
       ),
