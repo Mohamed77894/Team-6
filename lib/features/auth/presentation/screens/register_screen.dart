@@ -1,4 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
+
+import '../../../../app/routes.dart';
+import '../cubit/auth_cubit.dart';
+import '../cubit/auth_state.dart';
+import '../widgets/auth_widgets.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
@@ -8,207 +15,174 @@ class RegisterScreen extends StatefulWidget {
 }
 
 class _RegisterScreenState extends State<RegisterScreen> {
-  final TextEditingController passwordController = TextEditingController();
+  final _formKey = GlobalKey<FormState>();
+  final _firstNameController = TextEditingController();
+  final _lastNameController = TextEditingController();
+  final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
 
-  bool hasEightCharacters = false;
-  bool hasCapitalLetter = false;
-  bool hasSmallLetter = false;
-  bool hasNumber = false;
-  bool hasSymbol = false;
-
-  void checkPassword(String password) {
-    setState(() {
-      hasEightCharacters = password.length >= 8;
-      hasCapitalLetter = RegExp(r'[A-Z]').hasMatch(password);
-      hasSmallLetter = RegExp(r'[a-z]').hasMatch(password);
-      hasNumber = RegExp(r'[0-9]').hasMatch(password);
-      hasSymbol = RegExp(r'[!@#$%^&*(),.?":{}|<>]').hasMatch(password);
-    });
-  }
+  bool get _validPassword =>
+      _passwordController.text.length >= 8 &&
+      RegExp(r'[A-Z]').hasMatch(_passwordController.text) &&
+      RegExp(r'[a-z]').hasMatch(_passwordController.text) &&
+      RegExp(r'[0-9]').hasMatch(_passwordController.text) &&
+      RegExp(r'[^A-Za-z0-9]').hasMatch(_passwordController.text);
 
   @override
   void dispose() {
-    passwordController.dispose();
+    _firstNameController.dispose();
+    _lastNameController.dispose();
+    _emailController.dispose();
+    _passwordController.dispose();
     super.dispose();
+  }
+
+  void _register() {
+    if (!_formKey.currentState!.validate() || !_validPassword) {
+      setState(() {});
+      return;
+    }
+    context.read<AuthCubit>().register(
+      firstName: _firstNameController.text.trim(),
+      lastName: _lastNameController.text.trim(),
+      email: _emailController.text.trim(),
+      password: _passwordController.text,
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text(
-          'Welcome to talabat',
-          style: TextStyle(
-            fontFamily: 'Poppins',
-            fontSize: 18,
-          ),
-        ),
-        centerTitle: true,
-      ),
-
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 18),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const SizedBox(height: 30),
-
-              const Text(
-                'Create Your account',
-                style: TextStyle(
-                  fontFamily: 'Poppins',
-                  fontSize: 18,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-
-              const SizedBox(height: 25),
-
-              TextField(
-                decoration: InputDecoration(
-                  hintText: 'First Name',
-                  hintStyle: const TextStyle(
-                    fontFamily: 'Poppins',
-                    fontSize: 10,
-                    color: Colors.grey,
-                  ),
-                  border: const UnderlineInputBorder(),
-                ),
-              ),
-
-              const SizedBox(height: 25),
-
-              TextField(
-                decoration: InputDecoration(
-                  hintText: 'Last Name',
-                  hintStyle: const TextStyle(
-                    fontFamily: 'Poppins',
-                    fontSize: 10,
-                    color: Colors.grey,
-                  ),
-                  border: const UnderlineInputBorder(),
-                ),
-              ),
-
-              const SizedBox(height: 25),
-
-              TextField(
-                decoration: InputDecoration(
-                  hintText: 'Email',
-                  hintStyle: const TextStyle(
-                    fontFamily: 'Poppins',
-                    fontSize: 10,
-                    color: Colors.grey,
-                  ),
-                  border: const UnderlineInputBorder(),
-                ),
-              ),
-
-              const SizedBox(height: 25),
-
-              TextField(
-                controller: passwordController,
-                obscureText: true,
-                onChanged: checkPassword,
-                decoration: InputDecoration(
-                  hintText: 'Password',
-                  hintStyle: const TextStyle(
-                    fontFamily: 'Poppins',
-                    fontSize: 10,
-                    color: Colors.grey,
-                  ),
-                  border: const UnderlineInputBorder(),
-                ),
-              ),
-
-              const SizedBox(height: 15),
-
-              // Password requirements
-              Text(
-                'Password must contain:',
-                style: TextStyle(
-                  fontFamily: 'Poppins',
-                  fontSize: 10,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-
-              const SizedBox(height: 8),
-
-              passwordRequirement(
-                'At least 8 characters',
-                hasEightCharacters,
-              ),
-
-              passwordRequirement(
-                'At least one capital letter',
-                hasCapitalLetter,
-              ),
-
-              passwordRequirement(
-                'At least one small letter',
-                hasSmallLetter,
-              ),
-
-              passwordRequirement(
-                'At least one number',
-                hasNumber,
-              ),
-
-              passwordRequirement(
-                'At least one symbol',
-                hasSymbol,
-              ),
-
-              const SizedBox(height: 15),
-
-              Container(
-                width: double.infinity,
-                height: 45,
-                decoration: BoxDecoration(
-                  color: Colors.deepOrange,
-                  borderRadius: BorderRadius.circular(15),
-                ),
-                child: const Center(
-                  child: Text(
-                    'Create account',
-                    style: TextStyle(
-                      fontFamily: 'Poppins',
-                      fontSize: 11,
-                      fontWeight: FontWeight.w500,
-                      color: Colors.white,
+      appBar: AppBar(title: const Text('Create account')),
+      body: BlocConsumer<AuthCubit, AuthState>(
+        listener: (context, state) {
+          if (state is AuthRegistrationSucceeded) {
+            context.pushReplacementNamed(
+              AppRoutes.verifyEmail,
+              queryParameters: {'email': state.email},
+            );
+          } else if (state is AuthFailure) {
+            ScaffoldMessenger.of(
+              context,
+            ).showSnackBar(SnackBar(content: Text(state.message)));
+          }
+        },
+        builder: (context, state) {
+          final loading = state is AuthLoading;
+          return SafeArea(
+            child: Center(
+              child: SingleChildScrollView(
+                padding: const EdgeInsets.all(24),
+                child: ConstrainedBox(
+                  constraints: const BoxConstraints(maxWidth: 460),
+                  child: Form(
+                    key: _formKey,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        const Text(
+                          'Create your account',
+                          style: TextStyle(
+                            fontSize: 28,
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ),
+                        const SizedBox(height: 8),
+                        const Text(
+                          'An OTP is sent only after the registration request succeeds.',
+                        ),
+                        const SizedBox(height: 24),
+                        AuthTextField(
+                          controller: _firstNameController,
+                          label: 'First name',
+                          validator: (value) =>
+                              requiredField(value, 'First name'),
+                        ),
+                        const SizedBox(height: 14),
+                        AuthTextField(
+                          controller: _lastNameController,
+                          label: 'Last name',
+                          validator: (value) =>
+                              requiredField(value, 'Last name'),
+                        ),
+                        const SizedBox(height: 14),
+                        AuthTextField(
+                          controller: _emailController,
+                          label: 'Email',
+                          keyboardType: TextInputType.emailAddress,
+                          validator: emailValidator,
+                        ),
+                        const SizedBox(height: 14),
+                        AuthTextField(
+                          controller: _passwordController,
+                          label: 'Password',
+                          obscureText: true,
+                          textInputAction: TextInputAction.done,
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Password is required';
+                            }
+                            if (!_validPassword) {
+                              return 'Use the requirements below';
+                            }
+                            return null;
+                          },
+                        ),
+                        const SizedBox(height: 12),
+                        _PasswordRules(password: _passwordController.text),
+                        const SizedBox(height: 24),
+                        AuthPrimaryButton(
+                          label: 'Create account',
+                          loading: loading,
+                          onPressed: _register,
+                        ),
+                      ],
                     ),
                   ),
                 ),
               ),
-            ],
-          ),
-        ),
+            ),
+          );
+        },
       ),
     );
   }
+}
 
-  Widget passwordRequirement(String text, bool isValid) {
-    return Row(
-      children: [
-        Icon(
-          isValid ? Icons.check_circle : Icons.circle_outlined,
-          size: 14,
-          color: isValid ? Colors.green : Colors.grey,
-        ),
+class _PasswordRules extends StatelessWidget {
+  const _PasswordRules({required this.password});
 
-        const SizedBox(width: 6),
+  final String password;
 
-        Text(
-          text,
-          style: TextStyle(
-            fontFamily: 'Poppins',
-            fontSize: 9,
-            color: isValid ? Colors.green : Colors.grey,
-          ),
-        ),
-      ],
+  @override
+  Widget build(BuildContext context) {
+    final rules = <(String, bool)>[
+      ('At least 8 characters', password.length >= 8),
+      ('An uppercase letter', RegExp(r'[A-Z]').hasMatch(password)),
+      ('A lowercase letter', RegExp(r'[a-z]').hasMatch(password)),
+      ('A number', RegExp(r'[0-9]').hasMatch(password)),
+      ('A symbol', RegExp(r'[^A-Za-z0-9]').hasMatch(password)),
+    ];
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: rules
+          .map(
+            (rule) => Padding(
+              padding: const EdgeInsets.only(bottom: 4),
+              child: Row(
+                children: [
+                  Icon(
+                    rule.$2 ? Icons.check_circle : Icons.circle_outlined,
+                    size: 16,
+                    color: rule.$2 ? Colors.green : Colors.grey,
+                  ),
+                  const SizedBox(width: 6),
+                  Text(rule.$1),
+                ],
+              ),
+            ),
+          )
+          .toList(),
     );
   }
 }

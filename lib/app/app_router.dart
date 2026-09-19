@@ -1,80 +1,76 @@
-import 'package:dio/dio.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
-import '../core/network/api/dio_api_consumer.dart';
-import '../data/data_sources/product_remote_data_source.dart';
-import '../domain/repositories/product_repository_impl.dart';
+import '../core/di/service_locator.dart';
+import '../features/auth/presentation/cubit/auth_cubit.dart';
 import '../features/auth/presentation/screens/email_login_screen.dart';
-import '../features/auth/presentation/screens/forgot_password_screen.dart';
+import '../features/auth/presentation/screens/email_verification_screen.dart';
 import '../features/auth/presentation/screens/register_screen.dart';
 import '../features/auth/presentation/screens/start_up_screen.dart';
-import '../items_screen.dart';
-import '../presentation/cubit/products/product_cubit.dart';
-
-import 'routes.dart' as routes;
+import '../features/products/presentation/cubit/product_details_cubit.dart';
+import '../features/products/presentation/cubit/products_cubit.dart';
+import '../features/products/presentation/screens/product_details_screen.dart';
+import '../features/products/presentation/screens/product_screen.dart';
+import 'routes.dart';
 
 class AppRouter {
   static final GoRouter appRouter = GoRouter(
     initialLocation: '/',
-
     routes: [
       GoRoute(
         path: '/',
-        name: routes.startUpScreen,
-        builder: (context, state) {
-          return const StartUpScreen();
-        },
+        name: AppRoutes.start,
+        builder: (_, _) => const StartUpScreen(),
       ),
-
       GoRoute(
-        path: '/email-login',
-        name: routes.emailLoginScreen,
-        builder: (context, state) {
-          return const EmailLoginScreen();
-        },
+        path: '/login',
+        name: AppRoutes.login,
+        builder: (context, state) => BlocProvider<AuthCubit>(
+          create: (_) => getIt(),
+          child: EmailLoginScreen(
+            initialEmail: state.uri.queryParameters['email'],
+          ),
+        ),
       ),
-
-      GoRoute(
-        path: '/forgot-password',
-        name: routes.forgetpassword,
-        builder: (context, state) {
-          return const ForgotPasswordScreen();
-        },
-      ),
-
       GoRoute(
         path: '/register',
-        name: routes.registerScreen,
-        builder: (context, state) {
-          return const RegisterScreen();
-        },
+        name: AppRoutes.register,
+        builder: (_, _) => BlocProvider<AuthCubit>(
+          create: (_) => getIt(),
+          child: const RegisterScreen(),
+        ),
       ),
-
       GoRoute(
-        path: '/items-screen',
-        name: routes.itemsScreen,
-        builder: (context, state) {
-          final apiConsumer = DioApiConsumer(
-            dio: Dio(),
-          );
-
-          final remoteDataSource = ProductRemoteDataSource(
-            apiConsumer: apiConsumer,
-          );
-
-          final repository = ProductRepositoryImpl(
-            remoteDataSource: remoteDataSource,
-          );
-
-          return BlocProvider(
-            create: (context) => ProductCubit(
-              repository: repository,
-            ),
-            child: const ItemsScreen(),
-          );
-        },
+        path: '/verify-email',
+        name: AppRoutes.verifyEmail,
+        builder: (_, state) => BlocProvider<AuthCubit>(
+          create: (_) => getIt(),
+          child: EmailVerificationScreen(
+            email: state.uri.queryParameters['email'] ?? '',
+          ),
+        ),
+      ),
+      GoRoute(
+        path: '/products',
+        name: AppRoutes.products,
+        builder: (_, _) => BlocProvider<ProductsCubit>(
+          create: (_) => getIt(),
+          child: const ProductScreen(),
+        ),
+      ),
+      GoRoute(
+        path: '/products/:id',
+        name: AppRoutes.productDetails,
+        builder: (_, state) => BlocProvider<ProductDetailsCubit>(
+          create: (_) => getIt(),
+          child: ProductDetailsScreen(
+            productId: state.pathParameters['id'] ?? '',
+          ),
+        ),
       ),
     ],
+    errorBuilder: (_, _) =>
+        const Scaffold(body: Center(child: Text('Page not found'))),
   );
 }

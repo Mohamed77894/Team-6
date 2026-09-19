@@ -10,10 +10,7 @@ class ForgotPasswordScreen extends StatelessWidget {
         title: Center(
           child: const Text(
             'Forgot Password',
-            style: TextStyle(
-              fontFamily: 'Poppins',
-              fontSize: 18,
-            ),
+            style: TextStyle(fontFamily: 'Poppins', fontSize: 18),
           ),
         ),
       ),
@@ -31,7 +28,7 @@ class ForgotPasswordScreen extends StatelessWidget {
                   fontWeight: FontWeight.w600,
                 ),
               ),
-              SizedBox(height: 10,) ,
+              SizedBox(height: 10),
               TextField(
                 decoration: InputDecoration(
                   hintText: 'Email',
@@ -43,8 +40,8 @@ class ForgotPasswordScreen extends StatelessWidget {
                   border: const UnderlineInputBorder(),
                 ),
               ),
-              SizedBox(height: 10,) ,
-               Container(
+              SizedBox(height: 10),
+              Container(
                 width: double.infinity,
                 height: 45,
                 decoration: BoxDecoration(

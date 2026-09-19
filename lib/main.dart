@@ -2,17 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'app/app_router.dart';
+import 'core/di/service_locator.dart';
 import 'core/theme/app_theme.dart';
 import 'core/theme/theme_cubit.dart';
 import 'core/theme/theme_state.dart';
 
 void main() {
-  runApp(
-    BlocProvider(
-      create: (context) => ThemeCubit(),
-      child: const MyApp(),
-    ),
-  );
+  setupDependencies();
+  runApp(BlocProvider(create: (context) => ThemeCubit(), child: const MyApp()));
 }
 
 class MyApp extends StatelessWidget {
@@ -29,9 +26,7 @@ class MyApp extends StatelessWidget {
           theme: AppTheme.lightTheme,
           darkTheme: AppTheme.darkTheme,
 
-          themeMode: state.isDark
-              ? ThemeMode.dark
-              : ThemeMode.light,
+          themeMode: state.isDark ? ThemeMode.dark : ThemeMode.light,
         );
       },
     );

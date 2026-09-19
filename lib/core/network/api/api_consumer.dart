@@ -1,8 +1,6 @@
-
 import 'package:fpdart/fpdart.dart' show Either;
 
 import '../error/errors.dart' show ServerFailure;
-
 
 abstract class ApiConsumer {
   Future<Either<ServerFailure, Map<String, dynamic>>> get({

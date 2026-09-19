@@ -40,10 +40,15 @@ dependencies:
   fpdart: ^1.2.0
   equatable: ^3.0.0
   internet_connection_checker_plus: ^3.1.2
+  get_it: ^9.2.1
+  pinput: ^6.0.2
+  freezed_annotation: ^3.1.0
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  build_runner: ^2.4.15
+  freezed: ^3.2.5
 
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is
@@ -92,10 +97,10 @@ flutter:
   fonts:
     - family: Poppins
       fonts:
-        - asset: assets/fonts/Poppins-Regular.ttf
-        - asset: assets/fonts/Poppins-Medium.ttf
-        - asset: assets/fonts/Poppins-SemiBold.ttf
-        - asset: assets/fonts/Poppins-Bold.ttf
-        - asset: assets/fonts/Poppins-Black.ttf
+        - asset: assets/Fonts/Poppins-Regular.ttf
+        - asset: assets/Fonts/Poppins-Medium.ttf
+        - asset: assets/Fonts/Poppins-SemiBold.ttf
+        - asset: assets/Fonts/Poppins-Bold.ttf
+        - asset: assets/Fonts/Poppins-Black.ttf
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/to/font-from-package
