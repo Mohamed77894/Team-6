@@ -1,5 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../../core/network/api/auth_token_store.dart';
 import '../../domain/usecase/login.dart';
 import '../../domain/usecase/register_user.dart';
 import '../../domain/usecase/resend_otp.dart';
@@ -12,12 +13,14 @@ class AuthCubit extends Cubit<AuthState> {
     required this.verifyEmailUseCase,
     required this.resendOtpUseCase,
     required this.loginUser,
+    required this.tokenStore,
   }) : super(const AuthInitial());
 
   final RegisterUser registerUser;
   final VerifyEmail verifyEmailUseCase;
   final ResendOtp resendOtpUseCase;
   final LoginUser loginUser;
+  final AuthTokenStore tokenStore;
 
   Future<void> register({
     required String firstName,
@@ -59,9 +62,9 @@ class AuthCubit extends Cubit<AuthState> {
   Future<void> login({required String email, required String password}) async {
     emit(const AuthLoading());
     final result = await loginUser(email: email, password: password);
-    result.fold(
-      (failure) => emit(AuthFailure(failure.msg)),
-      (session) => emit(AuthLoginSucceeded(session)),
-    );
+    result.fold((failure) => emit(AuthFailure(failure.msg)), (session) {
+      tokenStore.save(session.accessToken);
+      emit(AuthLoginSucceeded(session));
+    });
   }
 }

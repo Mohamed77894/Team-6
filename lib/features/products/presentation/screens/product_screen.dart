@@ -3,6 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../app/routes.dart';
+import '../../../../core/di/service_locator.dart';
+import '../../../cart/presentation/cubit/cart_cubit.dart';
 import '../../domain/entities/product.dart';
 import '../cubit/products_cubit.dart';
 import '../cubit/products_state.dart';
@@ -24,7 +26,17 @@ class _ProductScreenState extends State<ProductScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Products'), centerTitle: false),
+      appBar: AppBar(
+        title: const Text('Products'),
+        centerTitle: false,
+        actions: [
+          IconButton(
+            onPressed: () => context.pushNamed(AppRoutes.cart),
+            icon: const Icon(Icons.shopping_cart_outlined),
+            tooltip: 'Cart',
+          ),
+        ],
+      ),
       body: BlocBuilder<ProductsCubit, ProductsState>(
         builder: (context, state) => switch (state) {
           ProductsInitial() ||
@@ -101,7 +113,16 @@ class _ProductCard extends StatelessWidget {
                   ],
                 ),
               ),
-              const Icon(Icons.chevron_right),
+              IconButton(
+                onPressed: () {
+                  getIt<CartCubit>().addProduct(product);
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text('Added to cart')),
+                  );
+                },
+                icon: const Icon(Icons.add_shopping_cart_outlined),
+                tooltip: 'Add to cart',
+              ),
             ],
           ),
         ),

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../../core/di/service_locator.dart';
+import '../../../cart/presentation/cubit/cart_cubit.dart';
 import '../../domain/entities/product.dart';
 import '../cubit/product_details_cubit.dart';
 import '../cubit/product_details_state.dart';
@@ -106,6 +108,17 @@ class _ProductDetails extends StatelessWidget {
       ),
       if (product.categories.isNotEmpty)
         _DetailRow(label: 'Categories', value: product.categories.join(', ')),
+      const SizedBox(height: 12),
+      FilledButton.icon(
+        onPressed: () {
+          getIt<CartCubit>().addProduct(product);
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(const SnackBar(content: Text('Added to cart')));
+        },
+        icon: const Icon(Icons.add_shopping_cart_outlined),
+        label: const Text('Add to cart'),
+      ),
     ],
   );
 }

@@ -4,12 +4,12 @@ import 'package:task_5/core/theme/theme_cubit.dart';
 import 'package:task_5/main.dart';
 
 void main() {
-  testWidgets('shows the authentication entry point', (tester) async {
+  testWidgets('shows onboarding first', (tester) async {
     await tester.pumpWidget(
       BlocProvider(create: (_) => ThemeCubit(), child: const MyApp()),
     );
 
-    expect(find.text('Login or create an account'), findsOneWidget);
-    expect(find.text('Continue with email'), findsOneWidget);
+    expect(find.text('Everything you need'), findsOneWidget);
+    expect(find.text('Next'), findsOneWidget);
   });
 }

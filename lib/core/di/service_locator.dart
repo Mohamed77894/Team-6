@@ -9,6 +9,7 @@ import '../../features/auth/domain/usecase/register_user.dart';
 import '../../features/auth/domain/usecase/resend_otp.dart';
 import '../../features/auth/domain/usecase/verify_email.dart';
 import '../../features/auth/presentation/cubit/auth_cubit.dart';
+import '../../features/cart/presentation/cubit/cart_cubit.dart';
 import '../../features/products/data/datasources/product_remote_data_source.dart';
 import '../../features/products/data/repositories/product_repository_impl.dart';
 import '../../features/products/domain/repositories/product_repository.dart';
@@ -17,6 +18,8 @@ import '../../features/products/domain/usecase/get_products.dart';
 import '../../features/products/presentation/cubit/product_details_cubit.dart';
 import '../../features/products/presentation/cubit/products_cubit.dart';
 import '../network/api/api_consumer.dart';
+import '../network/api/auth_interceptor.dart';
+import '../network/api/auth_token_store.dart';
 import '../network/api/dio_api_consumer.dart';
 
 final getIt = GetIt.instance;
@@ -24,14 +27,17 @@ final getIt = GetIt.instance;
 void setupDependencies() {
   if (getIt.isRegistered<ApiConsumer>()) return;
 
-  getIt.registerLazySingleton<Dio>(
-    () => Dio(
+  getIt.registerLazySingleton(AuthTokenStore.new);
+  getIt.registerLazySingleton<Dio>(() {
+    final dio = Dio(
       BaseOptions(
         connectTimeout: const Duration(seconds: 20),
         receiveTimeout: const Duration(seconds: 20),
       ),
-    ),
-  );
+    );
+    dio.interceptors.add(AuthInterceptor(getIt()));
+    return dio;
+  });
   getIt.registerLazySingleton<ApiConsumer>(() => DioApiConsumer(dio: getIt()));
 
   getIt.registerLazySingleton<AuthRemoteDataSource>(
@@ -50,6 +56,7 @@ void setupDependencies() {
       verifyEmailUseCase: getIt(),
       resendOtpUseCase: getIt(),
       loginUser: getIt(),
+      tokenStore: getIt(),
     ),
   );
 
@@ -63,4 +70,5 @@ void setupDependencies() {
   getIt.registerLazySingleton(() => GetProductDetails(getIt()));
   getIt.registerFactory(() => ProductsCubit(getIt()));
   getIt.registerFactory(() => ProductDetailsCubit(getIt()));
+  getIt.registerLazySingleton(CartCubit.new);
 }

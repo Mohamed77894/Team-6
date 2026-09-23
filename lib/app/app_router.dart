@@ -8,6 +8,9 @@ import '../features/auth/presentation/screens/email_login_screen.dart';
 import '../features/auth/presentation/screens/email_verification_screen.dart';
 import '../features/auth/presentation/screens/register_screen.dart';
 import '../features/auth/presentation/screens/start_up_screen.dart';
+import '../features/cart/presentation/cubit/cart_cubit.dart';
+import '../features/cart/presentation/screens/cart_screen.dart';
+import '../features/onboarding/presentation/screens/onboarding_screen.dart';
 import '../features/products/presentation/cubit/product_details_cubit.dart';
 import '../features/products/presentation/cubit/products_cubit.dart';
 import '../features/products/presentation/screens/product_details_screen.dart';
@@ -20,6 +23,11 @@ class AppRouter {
     routes: [
       GoRoute(
         path: '/',
+        name: AppRoutes.onboarding,
+        builder: (_, _) => const OnboardingScreen(),
+      ),
+      GoRoute(
+        path: '/start',
         name: AppRoutes.start,
         builder: (_, _) => const StartUpScreen(),
       ),
@@ -67,6 +75,14 @@ class AppRouter {
           child: ProductDetailsScreen(
             productId: state.pathParameters['id'] ?? '',
           ),
+        ),
+      ),
+      GoRoute(
+        path: '/cart',
+        name: AppRoutes.cart,
+        builder: (_, _) => BlocProvider<CartCubit>.value(
+          value: getIt(),
+          child: const CartScreen(),
         ),
       ),
     ],
